@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+</head>
+<body>
+
+<nav th:fragment="navigation">
+    <ul>
+        <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Выход</a></li>
+    </ul>
+</nav>
+
+<form th:method="POST" th:action="@{/admin/edit}" th:object="${user1}">
+    <input firstName="id" th:field="*{id}" th:value="${user1.id}" hidden="hidden">
+
+    <label for="username">Enter username: </label>
+    <input type="text" th:field="*{username}" th:value="${user1.username}" required id="username"/>
+
+  <label for="firstName">Enter firstName: </label>
+  <input type="text" th:field="*{firstName}" th:value="${user1.firstName}" required id="firstName"/>
+
+    <label for="lastname">Enter lastName: </label>
+    <input type="text" th:field="*{lastName}" th:value="${user1.lastName}" required id="lastName"/>
+
+    <label for="password">Enter password: </label>
+    <input type="text" th:field="*{password}" th:value="${user1.password}" required id="password"/>
+
+    <br/>
+
+    <label for="email">Enter email: </label>
+    <input type="text" th:field="*{email}" th:value="${user1.email}" required id="email"/>
+
+  <label for="ageInput">Enter age: </label>
+  <input type="number" th:field="*{age}" th:value="${user1.age}" required id="ageInput"/>
+
+    <br/>
+
+    <div>
+        <label>Role:</label><br/>
+        <select th:name="rolesName" multiple="multiple">
+            <option th:each="role : ${allRoles}"
+                    th:value="${role.name}"
+                    th:text="${role.name}">
+            </option>
+        </select>
+    </div>
+
+  <br/>
+  <input type="submit" value="Edit user"/>
+</form>
+
+</body>
+</html>

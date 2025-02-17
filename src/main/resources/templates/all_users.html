@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>All Users</title>
+
+</head>
+<body>
+
+<nav th:fragment="navigation">
+    <ul>
+        <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Выход</a></li>
+    </ul>
+</nav>
+
+<a th:href="@{/admin/add}" style="font-size: 35px;">Create new user</a>
+<br/>
+<br/>
+
+<div th:each="user : ${all_users}">
+    <a th:href="@{'/admin/show?id=' + ${user.id}}"
+       th:text="${user.getFirstName() + ' ' + user.getLastName()}"
+       style="font-size: 25px;">user</a>
+    <br/>
+
+    <form th:action="@{/admin/edit}" method="get">
+        <input type="hidden" name="id" th:value="${user.id}"/>
+        <input type="submit" value="Edit user"/>
+    </form>
+
+    <form method="post" th:action="@{/admin/delete}">
+        <button type="submit" th:name="id" th:value="${user.id}">Delete</button>
+    </form>
+
+</div>
+
+</body>
+</html>
