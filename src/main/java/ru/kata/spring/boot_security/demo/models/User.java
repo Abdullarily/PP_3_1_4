@@ -73,6 +73,15 @@ public class User implements UserDetails {
     @Transient
     private String passwordConfirm;
 
+    public User(String username, String firstName, String lastName, String email, int age, Set<Role> roles) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.age = age;
+        this.roles = roles;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -170,6 +179,8 @@ public class User implements UserDetails {
     public void setPasswordConfirm(String passwordConfirm) {
         this.passwordConfirm = passwordConfirm;
     }
+
+
 
     @Override
     public String toString() {

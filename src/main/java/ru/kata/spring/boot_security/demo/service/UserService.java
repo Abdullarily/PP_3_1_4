@@ -14,7 +14,9 @@ import ru.kata.spring.boot_security.demo.models.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 @Transactional
@@ -33,6 +35,20 @@ public class UserService implements UserDetailsService {
     public void save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         em.merge(user);
+    }
+
+    public void newAdmin() {
+        List<User> users = em.createQuery("select u from User u", User.class).getResultList();
+        if (users.isEmpty()) {
+            Role role = new Role("ROLE_ADMIN");
+            Role role2 = new Role("ROLE_USER");
+            Set<Role> roles = new HashSet<>();
+            roles.add(role);
+            roles.add(role2);
+            User admin = new User("admin", "admin", "admin", "admin@mail.ru", 30, roles);
+            admin.setPassword(passwordEncoder.encode("admin"));
+            em.persist(admin);
+        }
     }
 
     public List<User> allUsers() {

@@ -48,9 +48,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new SpringSecurityDialect();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("admin").password(passwordEncoder().encode("123")).roles("ADMIN");
-    }
 }
