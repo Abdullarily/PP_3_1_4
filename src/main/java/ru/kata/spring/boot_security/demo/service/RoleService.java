@@ -30,10 +30,6 @@ RoleService {
 
     public Set<Role> getRole(Set<String> rolesName) {
 
-        if (rolesName.contains("ROLE_ADMIN")) {
-            rolesName.add("ROLE_USER");
-        }
-
         TypedQuery<Role> query = em.createQuery(
                 "SELECT r FROM Role r WHERE r.name IN (:rolesName)",
                 Role.class
@@ -41,5 +37,25 @@ RoleService {
         query.setParameter("rolesName", rolesName);
 
         return new HashSet<>(query.getResultList());
+    }
+
+    public Set<Role> getRole(String name) {
+        TypedQuery<Role> query = em.createQuery(
+                "SELECT r FROM Role r WHERE r.name IN (:name)",
+                Role.class
+        );
+        query.setParameter("name", name);
+
+        return new HashSet<>(query.getResultList());
+    }
+
+    public Role getRoleByName(String name) {
+        return em.createQuery("SELECT r FROM Role r WHERE r.name = :name", Role.class)
+                .setParameter("name", name)
+                .getSingleResult();
+    }
+
+    public Role getRoleById(Integer id) {
+        return em.find(Role.class, id);
     }
 }

@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.models;
 
+import com.fasterxml.jackson.annotation.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -29,6 +30,7 @@ public class Role implements GrantedAuthority {
     }
 
     @ManyToMany(mappedBy = "roles")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private Set<User> users;
 
     @Id
@@ -64,8 +66,12 @@ public class Role implements GrantedAuthority {
 
 
     @Override
+    @JsonIgnore
     public String getAuthority() {
         return name;
     }
 
+    public String toString() {
+        return name;
+    }
 }

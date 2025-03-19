@@ -3,58 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <title>Add User</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
+    <br>
+    <h4 style="margin-left: 20px;">Add new user</h4>
+    <div class="table-container" style="border: 1px solid #ccc;  background-color: #fff;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-4">
+                    <div th:fragment="addUserForm">
+                    <form role="form" class="form-horizontal" th:method="POST" th:action="@{/admin/add}" th:object="${newUser}">
+                        <div class="form-group text-center">
+                            <label for="name" class="control-label font-weight-bold">Name</label>
+                            <input type="text" class="form-control" placeholder="Name" aria-label="Name"
+                                   th:field="*{firstName}" id="name">
+                        </div>
 
-<nav th:fragment="navigation">
-    <ul>
-        <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Выход</a></li>
-    </ul>
-</nav>
+                        <div class="form-group text-center">
+                            <label for="lastName" class="control-label font-weight-bold">Last Name</label>
+                            <input type="text" class="form-control" placeholder="Last Name" aria-label="Last name"
+                                   th:field="*{lastName}" id="lastName">
+                        </div>
 
-    <form th:method="POST" th:action="@{/admin}" th:object="${user}">
+                        <div class="form-group text-center">
+                            <label for="age" class="control-label font-weight-bold">Age</label>
+                            <input type="number" class="form-control" placeholder="Age" aria-label="Age" th:field="*{age}"
+                                   id="age">
+                        </div>
 
-        <label for="username">Enter userName: </label>
-        <input type="text" th:field="*{username}" id="username"/>
+                        <div class="form-group text-center">
+                            <label for="email" class="control-label font-weight-bold">Email</label>
+                            <input type="text" class="form-control" placeholder="Email" aria-label="Email"
+                                   th:field="*{email}" id="email">
+                        </div>
 
-        <br/>
+                        <div class="form-group text-center">
+                            <label for="pass" class="control-label font-weight-bold">Password</label>
+                            <input type="text" class="form-control" placeholder="Password" aria-label="Password"
+                                   th:field="*{password}" id="pass">
+                        </div>
 
-        <label for="firstName">Enter firstName: </label>
-        <input type="text" th:field="*{firstName}" id="firstName"/>
+                        <div class="form-group text-center">
+                            <label for="role" class="control-label font-weight-bold">Roles</label>
+                            <select class="form-control form-control-static" multiple="multiple" size="2"
+                                    id="role" name="rolesName">
+                                <option th:each="role : ${rolesName}"
+                                        th:value="${role.name}"
+                                        th:text="${role.name}">
+                                </option>
+                            </select>
+                        </div>
 
-        <br/>
-
-        <label for="lastname">Enter last name: </label>
-        <input type="text" th:field="*{lastName}" id="lastname"/>
-
-        <br/>
-
-        <label for="ageInput">Enter age: </label>
-        <input type="number" th:field="*{age}" id="ageInput"/>
-
-        <br/>
-
-        <label for="email">Enter email: </label>
-        <input type="text" th:field="*{email}" id="email"/>
-
-        <br/>
-
-        <label for="password">Enter password: </label>
-        <input type="text" th:field="*{password}" id="password"/>
-
-        <div>
-            <label>Role:</label><br/>
-            <select th:name="rolesName" multiple="multiple">
-                <option th:each="role : ${allRoles}"
-                        th:value="${role.name}"
-                        th:text="${role.name}">
-                </option>
-            </select>
+                        <div>
+                            <button type="submit" class="btn btn-success btn-lg d-block mx-auto" style="margin-bottom: 40px;">
+                                Add new user
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-
-        <br/>
-        <input type="submit" value="Add user"/>
-    </form>
+    </div>
 </body>
 </html>

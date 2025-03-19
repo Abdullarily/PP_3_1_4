@@ -10,7 +10,8 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.util.List;
+import java.security.Principal;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -26,23 +27,31 @@ public class AdminController {
 
 
     @GetMapping()
-    public String allUsers(Model model) {
-        model.addAttribute("all_users", userService.allUsers());
+    public String allUsers(Model model, Principal principal) {
+//        model.addAttribute("all_users", userService.allUsers());
+//        User user = userService.getUserByEmail(principal.getName());
+//        model.addAttribute("user", user);
+//        model.addAttribute("newUser", new User());
+//        model.addAttribute("rolesName", roleService.allRoles());
         return "all_users";
     }
 
     @GetMapping("add")
     public String addUser(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("allRoles", roleService.allRoles());
+        model.addAttribute("newUser", new User());
+        model.addAttribute("rolesName", roleService.allRoles());
         return "add_user";
     }
 
-    @PostMapping()
-    public String addDbUser(@ModelAttribute("user") User user,
+    @PostMapping("add")
+    public String addDbUser(@ModelAttribute("newUser") User user,
                             @RequestParam(value = "rolesName", required = false) Set<String> rolesName) {
-        Set<Role> roles = roleService.getRole(rolesName);
-        user.setRoles(roles);
+        if (rolesName != null) {
+            Set<Role> roles = roleService.getRole(new HashSet<>(rolesName));
+            user.setRoles(roles);
+        } else {
+            user.setRoles(new HashSet<>()); // Если роли не выбраны, назначаем пустой список
+        }
         userService.save(user);
         return "redirect:/admin";
     }
@@ -56,9 +65,12 @@ public class AdminController {
 
     @PostMapping("edit")
     public String editDbUser(@ModelAttribute("user1") User user, @RequestParam(value = "rolesName", required = false) Set<String> rolesName) {
-        Set<Role> roles = roleService.getRole(rolesName);
-        user.setRoles(roles);
-        user.setRoles(roleService.getRole(rolesName));
+        if (rolesName != null) {
+            Set<Role> roles = roleService.getRole(new HashSet<>(rolesName));
+            user.setRoles(roles);
+        } else {
+            user.setRoles(new HashSet<>()); // Если роли не выбраны, назначаем пустой список
+        }
         userService.editUser(user);
         return "redirect:/admin";
     }
@@ -72,7 +84,12 @@ public class AdminController {
     @GetMapping("show")
     public String showUser(Model model, @RequestParam("id") int id, User user) {
         user = userService.getUserById(id);
-        model.addAttribute("user", user);
+        model.addAttribute("showUser", user);
         return "show_user";
+    }
+
+    @GetMapping("static/js")
+    public String jsPage() {
+        return "index";
     }
 }

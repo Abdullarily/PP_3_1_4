@@ -1,7 +1,9 @@
 package ru.kata.spring.boot_security.demo.models;
 
 
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.Cascade;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -46,41 +48,36 @@ public class User implements UserDetails {
     @JoinTable(name = "users_roles",
                joinColumns = {@JoinColumn(name = "users_id")},
                inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private Set<Role> roles;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false)
+    @Column()
+    @JsonProperty("first_name")
     private String firstName;
 
-    @Column(nullable = false)
+    @Column()
+    @JsonProperty("last_name")
     private String lastName;
 
-    @Column(nullable = false)
+    @JsonIgnore
+    @Column()
     private String password;
 
-    @Column(nullable = false)
+    @Column()
     private String email;
 
-    @Column(name = "age", nullable = false)
+    @Column(name = "age")
     private int age;
 
+    @JsonIgnore
     @Transient
     private String passwordConfirm;
 
-    public User(String username, String firstName, String lastName, String email, int age, Set<Role> roles) {
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.age = age;
-        this.roles = roles;
-    }
+
 
     public String getFirstName() {
         return firstName;
@@ -122,6 +119,7 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
@@ -131,30 +129,30 @@ public class User implements UserDetails {
         return password;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     @Override
     public String getUsername() {
-        return username;
+        return this.email;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
@@ -178,12 +176,5 @@ public class User implements UserDetails {
 
     public void setPasswordConfirm(String passwordConfirm) {
         this.passwordConfirm = passwordConfirm;
-    }
-
-
-
-    @Override
-    public String toString() {
-        return firstName + " " + age;
     }
 }
